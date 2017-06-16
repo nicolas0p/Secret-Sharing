@@ -17,9 +17,23 @@ class ShamirTest(unittest.TestCase):
         result = [(1, 4708), (2, 472), (3, 1551), (4, 2976), (5, 4747), (6, 1895), (7, 4358)]
         self.assertListEqual(result, shares)
 
+    def test_inverse(self):
+        prime = 2**19-1
+        a = 12345
+        self.assertEqual(1, a*shamir.inverse(a, prime) % prime)
+
     def test_whole_process(self):
-        shares = shamir.shamir(4321, 7, 3, 4969)
-        self.assertEqual(4321, shamir.reconstruct_secret(shares[1:4], 3, 4969))
+        secret = 123456
+        n = 120
+        t = 58
+        prime = 2**19-1
+        #secret = 32
+        #n = 5
+        #t = 3
+        #prime = 53
+        #import pdb; pdb.set_trace()
+        shares = shamir.shamir(secret, n, t, prime)
+        self.assertEqual(secret, shamir.reconstruct_secret(shares[0:t], t, prime))
 
 if __name__ == '__main__':
     unittest.main()

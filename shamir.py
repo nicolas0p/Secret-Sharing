@@ -29,6 +29,20 @@ def shamir(secret, members_quantity, threshold, prime):
     shares = _generate_shares(coefficients, members_quantity, prime);
     return shares
 
+"""@returns a^-1 mod n"""
+def inverse(a, n):
+    t = 0; newt = 1
+    r = n; newr = a % n
+    while newr != 0:
+        quotient = r // newr
+        t, newt = newt, t - quotient * newt
+        r, newr = newr, r - quotient * newr
+    if r > 1:
+        return False #a is not invertible mod n
+    if t < 0:
+        t += n
+    return t
+
 def reconstruct_secret(shares, threshold, prime):
     if len(shares) < threshold:
         return "At least t shares are needed to calculate the secret"
@@ -39,8 +53,15 @@ def reconstruct_secret(shares, threshold, prime):
         for m in range(threshold):
             if m == i:
                 continue
-            partial *= shares[m][0] / (shares[m][0] - shares[i][0])
+            partial *= (shares[m][0] * inverse(shares[m][0] - shares[i][0], prime) % prime)
         result += partial % prime
     return result % prime
 
-#if __name__ == "__main__":
+if __name__ == "__main__":
+    secret = int(input("Type in the secret:"))
+    n = int(input("Type in the n:"))
+    t = int(input("Type in the t:"))
+    prime = int(input("Type in the prime:"))
+    shares = shamir(secret, n, t, prime)
+    result = reconstruct_secret(shares[0:t], t, prime)
+    print("The reconstructed secret is: " + str(result))
