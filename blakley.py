@@ -1,6 +1,5 @@
 import sys
 sys.path.insert(0, './Galois')
-from galois import GF
 from coding import Matrix
 
 import random

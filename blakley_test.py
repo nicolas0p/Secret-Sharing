@@ -44,7 +44,7 @@ class BlakleyTest(unittest.TestCase):
 
     def test_generate_shares_and_calculate_secret(self):
         secret = 4321
-        t = 3
+        t = 42
         prime = 4969
         bl = blakley.Blakley(secret, t, prime)
         shares = []
